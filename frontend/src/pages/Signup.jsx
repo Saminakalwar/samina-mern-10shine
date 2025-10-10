@@ -3,19 +3,22 @@ import { Link, useNavigate } from 'react-router-dom';
 import { validateEmail } from '../utils/helper';
 import PasswordInput from '../components/PasswordInput';
 import Navbar from '../components/Navbar';
+import useAuth from '../hooks/useAuth';
 
 const Signup = () => {
-  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const {register} = useAuth();
 
   const navigate = useNavigate();
 
-  const handleSignUp = (e) => {
+  const handleSignUp = async(e) => {
     e.preventDefault();
 
-    if (!name) {
+    if (!username) {
       setError("Please enter your name");
       return;
     }
@@ -34,9 +37,19 @@ const Signup = () => {
     }
 
     setError(null);
-    // later: call AuthContext.register here
+    setLoading(true);
+   
     //SignUp API call
-    navigate('/dashboard');
+    try{
+      await register(username, email, password);
+      navigate('/dashboard');
+    }
+    catch(err){
+      alert(err.response?.data?.message || 'Registration failed')
+    }finally{
+      setLoading(false);
+    }
+    
   };
 
   return (
@@ -50,18 +63,18 @@ const Signup = () => {
           
           <input
             id="username"
-            name="username"
+            username="username"
             type="text"
             placeholder="Username"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-400"
             required
             autoComplete="username"
           />
           <input
             id="email"
-            name="email"
+            username="email"
             type="email"
             placeholder="Email"
             value={email}
