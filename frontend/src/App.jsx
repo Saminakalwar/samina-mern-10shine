@@ -2,9 +2,8 @@ import React from 'react'
 import Signup from './pages/Signup'
 import Login from './pages/Login'
 import { Route, Routes } from 'react-router-dom'
-// import Home from './pages/Home'
-// import Profile from './pages/Profile'
-import Dashboard from './pages/Dashboard'
+import Home from './pages/Home'
+import Profile from './pages/Profile'
 
 const App = () => {
   return (
@@ -13,9 +12,8 @@ const App = () => {
     <Route path='/' element={<Signup/>}/>
     <Route path="/signup" element={<Signup />} />
     <Route path='/login' element={<Login/>}/>
-    <Route path='/dashboard' element={<Dashboard/>}/>
-     {/* <Route path='/dashboard' element={<Home/>}/>
-      <Route path="/profile" element={<Profile />} /> */}
+     <Route path='/dashboard' element={<Home/>}/>
+     <Route path="/profile" element={<Profile />} />
 
    </Routes>
   )
