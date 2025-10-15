@@ -19,7 +19,7 @@ const Profile = () => {
         {/* Header Section */}
         <div className="max-w-4xl mx-auto text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-800">
-            Welcome {user?.fullname || "User"} 👋
+            Welcome {user?.username || "User"} 👋
           </h1>
           <p className="text-gray-600 mt-2">
             Start your day with a note!
@@ -32,11 +32,11 @@ const Profile = () => {
             {/* Profile Row */}
             <div className="flex items-center gap-4 mb-6">
               <div className="bg-indigo-500 text-white w-14 h-14 flex items-center justify-center rounded-full text-xl font-semibold">
-                {getInitials(user?.fullname)}
+                {getInitials(user?.username)}
               </div>
               <div className="text-left">
                 <p className="text-lg font-semibold text-gray-800">
-                  {user?.fullname || "Loading..."}
+                  {user?.username || "Loading..."}
                 </p>
                 <p className="text-sm text-gray-500">{user?.email}</p>
               </div>
@@ -47,8 +47,8 @@ const Profile = () => {
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700">
               <div>
-                <p className="text-sm text-gray-500">Full Name</p>
-                <p className="font-medium">{user?.fullname || "—"}</p>
+                <p className="text-sm text-gray-500"> Username</p>
+                <p className="font-medium">{user?.username || "—"}</p>
               </div>
               <div>
                 <p className="text-sm text-gray-500">Email</p>
@@ -56,7 +56,7 @@ const Profile = () => {
               </div>
               <div>
                 <p className="text-sm text-gray-500">User ID</p>
-                <p className="font-medium">{user?._id}</p>
+                <p className="font-medium">{user?.id}</p>
               </div>
               <div>
                 <p className="text-sm text-gray-500">Country</p>
