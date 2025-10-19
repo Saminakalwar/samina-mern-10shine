@@ -28,8 +28,8 @@ const Navbar = () => {
     navigate("/login");
   };
 
-  const initials = user?.fullname
-    ? user.fullname.split(" ").map((n) => n[0]).join("").toUpperCase() : "U";
+  const initials = user?.username
+    ? user.username.split(" ").map((n) => n[0]).join("").toUpperCase() : "U";
 
   return (
     <nav className="fixed top-0 left-0 right-0 bg-white flex items-center justify-between px-6 py-3 shadow-md z-50">
@@ -48,7 +48,7 @@ const Navbar = () => {
             {initials}
           </div>
           <span className="text-sm font-medium text-gray-700">
-            {user?.fullname || "User"}
+            {user?.username || "User"}
           </span>
 
           <MdKeyboardArrowDown
