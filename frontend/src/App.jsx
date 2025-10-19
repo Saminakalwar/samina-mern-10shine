@@ -8,6 +8,7 @@ import Profile from './pages/Profile'
 const App = () => {
   return (
    <Routes>
+
     <Route path='/' element={<Signup/>}/>
     <Route path="/signup" element={<Signup />} />
     <Route path='/login' element={<Login/>}/>
