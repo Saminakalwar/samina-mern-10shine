@@ -20,13 +20,8 @@ exports.getUser = async (req, res, next) => {
 
     res.json({
     error: false,
-    user: {
-        id: user._id,
-        username: user.username || user.fullname || user.name, // fallback safe
-        email: user.email,
-        createdAt: user.createdAt,
-    },
-    message: "",
+    user: { id: user._id, username: user.username, email: user.email, createdAt: user.createdAt, updatedAt: user.updatedAt },
+    message: "User fetched successfully",
     });
 
   } catch (err) {
@@ -71,7 +66,7 @@ exports.register = async (req, res, next)=>{
     logger.info({reqId, user: user._id},"user registered successfully");
 
     res.status(201).json({error: false, token, 
-        user: {id: user._id, username: user.username, email: user.email},
+       user: { id: user._id, username: user.username, email: user.email, createdAt: user.createdAt, updatedAt: user.updatedAt },
         message: "Registration Successful",
     });
 }
@@ -114,7 +109,7 @@ exports.login = async (req, res, next)=>{
     logger.info({ reqId, userId: user._id }, 'User logged in successfully');
 
     res.status(200).json({error: false, token, 
-        user: {id: user._id, username: user.username, email: user.email},
+        user: { id: user._id, username: user.username, email: user.email, createdAt: user.createdAt, updatedAt: user.updatedAt },
         message: "Signed in Successfully",
     });
     }

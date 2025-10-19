@@ -32,9 +32,14 @@ const expressLogger = expressPino({
     }),
   },
    autoLogging: {
-    ignore: (req) =>
-      req.url === "/favicon.ico" || req.url.startsWith("/static") || req.url === '/health',
+   ignore: (req) =>
+  req.url === "/favicon.ico" ||
+  req.url.startsWith("/static") ||
+  req.url === "/health" ||
+  (req.url.startsWith("/api/auth/get-user") ||
+  (req.url.includes("/notes") && req.method === "GET")),
   },
 });
 
 module.exports = { logger, expressLogger };
+
