@@ -1,0 +1,93 @@
+import React, { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import API from "../services/api";
+
+const ResetPassword = () => {
+  const navigate = useNavigate();
+  const { token } = useParams();
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState(null);
+  const [error, setError] = useState(null);
+
+  const handleReset = async (e) => {
+    e.preventDefault();
+    setError(null);
+    setMessage(null);
+
+    if (newPassword.length < 6) {
+      setError("Password must be at least 6 characters long");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await API.post(`/auth/reset-password/${token}`, { newPassword });
+      setMessage(res.data.message || "Password reset successful! Redirecting...");
+      setTimeout(() => navigate("/login"), 2500);
+    } catch (err) {
+      setError(err.response?.data?.message || "Invalid or expired reset link.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-4">
+          Reset Password
+        </h2>
+        <p className="text-gray-500 text-center mb-6">
+          Enter your new password to regain access to your Notes App account.
+        </p>
+
+        <form onSubmit={handleReset} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-600 mb-1">
+              New Password
+            </label>
+            <input
+              type="password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring focus:ring-blue-400 focus:outline-none"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-600 mb-1">
+              Confirm Password
+            </label>
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring focus:ring-blue-400 focus:outline-none"
+              required
+            />
+          </div>
+
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+          {message && <p className="text-green-600 text-sm">{message}</p>}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-blue-600 text-white rounded-lg py-2 hover:bg-blue-700 transition"
+          >
+            {loading ? "Resetting..." : "Reset Password"}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default ResetPassword;
