@@ -1,33 +1,46 @@
 // src/middleware/authMiddleware.js
 const { verifyToken } = require('../utils/jwt');
 const User = require('../models/User');
+const {logger} = require('../logger/logger');
 
 const authMiddleware = async (req, res, next) => {
+  const reqId = req.id;
+
   try {
     const authHeader = req.headers.authorization || '';
     const token = authHeader.startsWith('Bearer ') ? authHeader.split(' ')[1] : null;
 
     if (!token) {
-      return res.status(401).json({ message: 'No token provided' });
+      logger.warn({ reqId }, 'No token provided');
+      return res.status(401).json({ error: true, message: 'No token provided' });
     }
 
+    //Verify Token
     let decoded;
     try {
       decoded = verifyToken(token);
-    } catch (err) {
+    } 
+    catch (err) {
+      logger.warn({ reqId, error: err.message }, 'Token invalid or expired');
       return res.status(401).json({ message: 'Token invalid or expired' });
     }
 
+    //Fetch User
     const user = await User.findById(decoded.id).select('-password');
+
     if (!user) {  //token valid but user not found.
+      logger.warn({ reqId, userId: decoded.id }, 'token valid but user not found');
       return res.status(401).json({ message: 'Invalid token' });
     }
-    // if user found with valid token then Attach user to req and allow the request to continue
+
+    // user found + valid token => Attach user to req and allow the request to continue
     req.user = user;
+    logger.debug({ reqId, userId: user._id }, 'User authenticated successfully');
     next();
     
   } catch (err) {
-    return res.status(500).json({ message: 'Auth middleware error' });
+    logger.error({ reqId, error: err.message }, 'Auth Middleware Internal error');
+    res.status(500).json({error: true,  message: 'Authentication Failed' });
   }
 };
 

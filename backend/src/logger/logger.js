@@ -1,4 +1,3 @@
-// same in PR6
 const pino = require('pino');
 const expressPino = require('express-pino-logger');
 
@@ -43,3 +42,4 @@ const expressLogger = expressPino({
 });
 
 module.exports = { logger, expressLogger };
+

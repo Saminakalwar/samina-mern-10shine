@@ -1,4 +1,3 @@
-
 const User = require('../models/User');
 const { logger } = require('../logger/logger');
 const bcrypt = require('bcryptjs');
