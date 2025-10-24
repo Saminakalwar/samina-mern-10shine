@@ -28,6 +28,17 @@ const Navbar = () => {
     navigate("/login");
   };
 
+      // Only render dropdown if user is authenticated
+  if (!user) {
+    return (
+      <nav className="fixed top-0 left-0 right-0 bg-white flex items-center justify-between px-6 py-3 shadow-md z-50">
+        <Link to="/login">
+          <h2 className="text-xl font-medium text-black py-2">Notes App</h2>
+        </Link>
+      </nav>
+    );
+  }
+
   const initials = user?.username
     ? user.username.split(" ").map((n) => n[0]).join("").toUpperCase() : "U";
 
