@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import { AuthProvider } from "./contexts/AuthContext";
-// import { NotesProvider } from "./contexts/NotesContext";
+import { NotesProvider } from "./contexts/NotesContext";
 import { BrowserRouter } from "react-router-dom";
 import "./index.css"; 
 
@@ -10,10 +10,13 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthProvider>
-        {/* <NotesProvider> */}
+        <NotesProvider>
           <App />
-        {/* </NotesProvider> */}
+        </NotesProvider>
       </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>
 );
+
+// { "email":"samina@example.com", "password":"Password123!" }
+

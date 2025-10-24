@@ -10,6 +10,7 @@ const { randomUUID } = require('crypto');
 const authRoutes = require('./src/routes/authRoutes');
 const noteRoutes = require('./src/routes/noteRoutes');
 const errorMiddleware = require('./src/middleware/errorMiddleware');
+const passwordRoutes = require('./src/routes/passRoutes');
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.use(expressLogger);
 
 app.use('/api/auth', authRoutes);
 app.use('/api/notes', noteRoutes);
+app.use('/api/auth', passwordRoutes);
 
 //404-error handler
 app.use((req, res) => {
