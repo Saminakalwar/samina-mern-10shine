@@ -11,13 +11,13 @@ import ResetPassword from './pages/ResetPassword'
 const App = () => {
   return (
    <Routes>
+    
     {/* Public Routes */}
     <Route path='/' element={<Signup/>}/>
     <Route path="/signup" element={<Signup />} />
     <Route path='/login' element={<Login/>}/>
     <Route path="/forgot-password" element={<ForgotPasswordModal />} />
     <Route path="/reset-password/:token" element={<ResetPassword />} />
-
 
     {/* Protected Routes */}
      <Route path='/dashboard' element={ <ProtectedRoutes> <Home/> <ProtectedRoutes/></ProtectedRoutes>}/>
