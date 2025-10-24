@@ -4,6 +4,7 @@ import Login from './pages/Login'
 import { Route, Routes } from 'react-router-dom'
 import Home from './pages/Home'
 import Profile from './pages/Profile'
+import ProtectedRoutes from './routes/ProtectedRoute'
 
 const App = () => {
   return (
@@ -12,8 +13,9 @@ const App = () => {
     <Route path='/' element={<Signup/>}/>
     <Route path="/signup" element={<Signup />} />
     <Route path='/login' element={<Login/>}/>
-     <Route path='/dashboard' element={<Home/>}/>
-     <Route path="/profile" element={<Profile />} />
+     {/* Protected Routes */}
+     <Route path='/dashboard' element={ <ProtectedRoutes> <Home/> <ProtectedRoutes/></ProtectedRoutes>}/>
+     <Route path="/profile" element={<ProtectedRoutes> <Profile /> </ProtectedRoutes>} />
 
    </Routes>
   )
