@@ -14,11 +14,11 @@ import { FaBold, FaItalic, FaUnderline, FaStrikethrough,FaListUl,FaListOl} from 
   if (!editor) return null;
 
   const buttonClass =
-    "p-2 rounded hover:bg-gray-100 transition text-gray-600 active:bg-gray-200";
-  const activeClass = "bg-blue-100 text-blue-600";
+     "p-2 rounded transition text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700";
+  const activeClass = "bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-400";
 
   return (
-    <div className="flex flex-wrap justify-between items-center bg-gray-50 border-t border-gray-200 rounded-b-lg p-2">
+    <div className="flex flex-wrap justify-between items-center bg-[#D6CCC2] dark:bg-gray-800 border-t border-gray-300 dark:border-gray-700 rounded-b-lg p-2">
       <div className="flex gap-1">
         <button
           onClick={() => editor.chain().focus().toggleBold().run()}
@@ -113,7 +113,7 @@ const EditNotes = ({ noteData, type, onClose, fetchNotes }) => {
     editorProps: {
       attributes: {
         class:
-          "ProseMirror w-full min-h-[200px] p-3 outline-none text-sm text-gray-800 bg-white",
+           "ProseMirror w-full min-h-[200px] p-3 outline-none text-sm bg-[#D6CCC2] text-gray-900 dark:bg-gray-800 dark:text-gray-100 rounded-t-lg",
       },
     },
   });
@@ -147,21 +147,24 @@ const EditNotes = ({ noteData, type, onClose, fetchNotes }) => {
   }
 
   return (
-    <div className="relative">
+<div className="fixed inset-0 flex items-center justify-center bg-transparent z-50" onClick={onClose}>
+   
+      <div className="w-full max-w-lg bg-[#E3D5CA] text-gray-900 dark:bg-gray-900 dark:text-gray-100 rounded-xl p-6 border border-gray-200 dark:border-gray-700 shadow-xl relative" onClick={(e) => e.stopPropagation()}>
+       
       {/* Close Button */}
       <button
-        className="w-10 h-10 rounded-full flex items-center justify-center absolute -top-3 -right-3 hover:bg-slate-50"
+        className="w-8 h-8 rounded-full flex items-center justify-center absolute -top-3 -right-3 bg-gray-700 hover:bg-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 text-white"
         onClick={onClose}
       >
-        <MdClose className="text-xl text-slate-400" />
+        <MdClose className="text-lg" />
       </button>
 
       {/* Title */}
       <div className="flex flex-col gap-2">
-        <label className="input-label">TITLE</label>
+        <label className="text-sm text-gray-600 dark:text-gray-400">TITLE</label>
         <input
           type="text"
-          className="text-2xl text-slate-950 outline-none border-b border-gray-200 pb-1 focus:border-blue-400 transition"
+          className="text-2xl bg-transparent text-gray-900 dark:text-gray-100 border-b border-gray-300 dark:border-gray-700 pb-1 focus:border-blue-500 transition outline-none"
           placeholder="Enter note title..."
           value={title}
           onChange={({ target }) => setTitle(target.value)}
@@ -170,8 +173,8 @@ const EditNotes = ({ noteData, type, onClose, fetchNotes }) => {
 
       {/* Content */}
       <div className="flex flex-col gap-2 mt-4">
-        <label className="input-label">CONTENT</label>
-        <div className="rounded-lg border border-gray-200 overflow-hidden flex flex-col">
+        <label className="text-sm text-gray-600 dark:text-gray-400">CONTENT</label>
+        <div className="rounded-lg border border-gray-300 dark:border-gray-700 overflow-hidden flex flex-col">
           <EditorContent editor={editor} />
           <Toolbar editor={editor}/>
         </div>
@@ -180,15 +183,15 @@ const EditNotes = ({ noteData, type, onClose, fetchNotes }) => {
       {error && <p className="text-red-500 text-xs pt-4">{error}</p>}
 
       <button
-        className="btn-primary font-medium mt-5 p-3 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+        className="w-full mt-6 p-3 rounded-lg font-medium bg-[#8C7E73] hover:bg-[#8C7E80] dark:bg-indigo-600 dark:hover:bg-indigo-700 text-white transition"
         onClick={handleSaveNote}
         disabled={saving}
       >
         {saving ? "Saving..." : type === "edit" ? "Update Note" : "Add Note"}
       </button>
     </div>
+    </div>
   );
 };
 
 export default EditNotes;
-
