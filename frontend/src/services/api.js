@@ -23,11 +23,12 @@ API.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Token expired or invalid — force logout
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      window.location.href = "/login";
-    }
+  localStorage.clear();
+  if (!window.location.pathname.includes("/login")) {
+    window.location.replace("/login");
+  }
+}
+
     return Promise.reject(error);
   }
 );
