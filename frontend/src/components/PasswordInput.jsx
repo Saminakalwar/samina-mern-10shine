@@ -9,28 +9,42 @@ const PasswordInput = ({ id, name, value, onChange, placeholder, autoComplete}) 
   };
 
   return (
+
+    
     <div className="relative w-full">
+
+       <label htmlFor={id || "password"} className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+        Your password
+      </label>
+            {/* <input type="password" name="password" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required /> */}
+      <div className="relative flex items-center">
       <input
         id={id}
         name={name}
         value={value}
         onChange={onChange}
-        placeholder={placeholder || "Password"}
+        placeholder={placeholder || "••••••••"}
         type={showPassword ? "text" : "password"}
-        className="w-full px-4 py-2 pr-10 border rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-400"
+        className="input-box pr-10"
         required
-        autoComplete={autoComplete}
+        // autoComplete={autoComplete}
       />
-      <span
-        className="absolute inset-y-0 right-3 flex items-center cursor-pointer"
-        onClick={toggleShowPassword}
-      >
-        {showPassword ? (
-          <FaRegEye size={22} className="text-primary" />
-        ) : (
-          <FaRegEyeSlash size={22} className="text-slate-400" />
-        )}
-      </span>
+
+{/* Eye Icon */}
+<button
+  type="button"
+  onClick={() => setShowPassword(!showPassword)}
+  className="absolute right-3 text-gray-400 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400"
+  style={{ top: '50%', transform: 'translateY(-50%)' }}
+>
+          {showPassword ? (
+            <FaRegEye size={16} />
+          ) : (
+            <FaRegEyeSlash size={16} />
+          )}
+        </button>
+
+      </div>
     </div>
   );
 };
