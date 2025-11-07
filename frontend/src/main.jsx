@@ -4,6 +4,7 @@ import App from "./App";
 import { AuthProvider } from "./contexts/AuthContext";
 import { NotesProvider } from "./contexts/NotesContext";
 import { BrowserRouter } from "react-router-dom";
+import { ProfileProvider } from "./contexts/ProfileContext";
 import "./index.css"; 
 
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -11,12 +12,11 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <BrowserRouter>
       <AuthProvider>
         <NotesProvider>
-          <App />
+          <ProfileProvider>
+            <App />
+          </ProfileProvider>
         </NotesProvider>
       </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>
 );
-
-// { "email":"samina@example.com", "password":"Password123!" }
-
