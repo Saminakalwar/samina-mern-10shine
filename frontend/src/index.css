@@ -1,94 +1,272 @@
-/* 1️ Fonts should always be first */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;...&display=swap');
+/* 1️ Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
-/* 2️ Then Tailwind */
+/* 2️ Tailwind setup */
 @import "tailwindcss";
 
-/* 3️ Then our custom theme/colors */
+/* Enable dark mode via `.dark` class on <html> */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* 3️ Base theme */
 @theme {
   --font-sans: "Poppins", sans-serif;
-  --color-primary: #2b85ff;  
-  --color-secondary: #ef863e; 
-   --color-bg: #fdfeff;
+  --color-primary: #2b85ff;
+  --color-secondary: #ef863e;
 }
 
-/* 4️ Base styles */
-@layer base {
-  body {
-   background-color: var(--color-bg);
-    overflow-x: hidden;
+/* Smooth transitions */
+html {
+  scroll-behavior: smooth;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Light/Dark backgrounds */
+html.dark body {
+  background-color: #0f172a;
+}
+body {
+  @apply font-sans bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+@layer utilities {
+  .input-box {
+    @apply w-full text-sm border border-gray-300 dark:border-gray-600
+           text-gray-900 dark:text-white rounded-lg p-2.5
+           focus:ring-blue-500 focus:border-blue-500 
+           transition duration-200 ease-in-out;
+    background-color: #EDEDE9 !important;
+  }
+
+  .dark .input-box {
+    background-color: #374151 !important; /* gray-700 */
   }
 }
 
-/* 5️ Utilities */
-/* @utility input-box {
-  @apply w-full text-sm bg-transparent border-[1.5px] px-5 py-3 rounded mb-4 outline-none;
-} */
-
-/* @utility btn-primary {
-  @apply w-full text-sm bg-primary text-white p-2 rounded my-1 hover:bg-blue-700;
-} */
-
-/* //noteCard CSS */
-/* .icon-btn {
-  @apply text-xl text-slate-300 cursor-pointer hover:text-primary;
-} */
+/* Components */
 @layer components {
-  .input-box {
-  @apply w-full text-sm bg-transparent border-[1.5px] px-5 py-3 rounded mb-4 outline-none;
-}
-.btn-primary {
-  @apply w-full text-sm bg-primary text-white p-2 rounded my-1 hover:bg-blue-700;
-}
+
+  .btn-primary {
+    @apply w-full text-sm bg-primary text-white p-2 rounded my-1 hover:bg-blue-700;
+  }
+
   .icon-btn {
     @apply text-xl text-slate-300 cursor-pointer transition-colors duration-200;
   }
-  .input-label{
+
+  .input-label {
     @apply text-xs text-slate-400;
+  }
+
+  .card {
+    @apply bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 rounded-lg shadow-md;
+  }
+  .input {
+    @apply border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-2 rounded w-full outline-none focus:border-blue-400 dark:focus:border-blue-500 transition;
+  }
+  .btn-primary {
+    @apply bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white rounded px-4 py-2 transition;
   }
 
 }
 
-/* Remove TipTap/ProseMirror focus border */
+/* ProseMirror editor styles */
 .ProseMirror {
   padding: 0.5rem;
-  min-height: 120px; /* so empty notes don’t collapse */
+  min-height: 120px;
   font-size: 0.95rem;
   line-height: 1.5;
 }
-
-/* Optional: keep a clean look while typing */
 .ProseMirror:focus {
   outline: none !important;
   border: none !important;
   box-shadow: none !important;
 }
-
 .ProseMirror ul {
   list-style-type: disc;
   padding-left: 1.5rem;
 }
-
 .ProseMirror ol {
   list-style-type: decimal;
   padding-left: 1.5rem;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+/* Simple fade + slide animations */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.animate-fadeIn { animation: fadeIn 0.3s ease-in-out; }
+.animate-slideUp { animation: slideUp 0.35s ease-in-out; }
+
+
+@keyframes expandCounter {
+  0% {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  40% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
-@keyframes slideUp {
-  from { transform: translateY(40px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+.animate-expand {
+  animation: expandCounter 0.6s ease-in-out;
 }
 
-.animate-fadeIn {
-  animation: fadeIn 0.3s ease-in-out;
+@keyframes pulse-number {
+  0%, 100% {
+    transform: scale(1);
+    color: rgb(74 222 128); /* green-400 */
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.2);
+    color: rgb(22 163 74); /* green-600 */
+    opacity: 1;
+  }
 }
 
-.animate-slideUp {
-  animation: slideUp 0.35s ease-in-out;
+.animate-pulse-number {
+  animation: pulse-number 3s ease-in-out infinite;
 }
+
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes fade-slide-up {
+  0% {
+    opacity: 0;
+    transform: translateY(15px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-heading-gradient {
+  animation:
+    fade-slide-up 0.8s ease-out forwards,
+    gradient-shift 6s ease-in-out infinite;
+  background-size: 200% 200%;
+}
+
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.4s ease-in-out;
+}
+
+
+.note-title-gradient {
+  background: linear-gradient(
+    90deg,
+    #8C7E73,   
+    #2E8B57,   
+    #2563EB,   
+    #4C1D95,   
+    #0E7490,  
+    #14532D    
+  );
+  background-size: 350% 350%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 600;
+  animation: gradient-move 7s ease-in-out infinite;
+  transition: background 0.5s ease-in-out;
+  text-shadow: 0 0 6px rgba(140, 126, 115, 0.25); /* soft warm glow */
+}
+
+/* Dark Theme — vivid glow with rich colors */
+.dark .note-title-gradient {
+  background: linear-gradient(
+    90deg,
+    #6EE7B7,   
+    #22D3EE,  
+    #3B82F6,  
+    #9333EA,   
+    #14B8A6,   
+    #84CC16    
+  );
+  background-size: 350% 350%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-move 7s ease-in-out infinite;
+  text-shadow: 0 0 8px rgba(59, 130, 246, 0.3); 
+}
+/* Gradient motion animation */
+@keyframes gradient-move {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.gradient-animated {
+  background-image: linear-gradient(
+    90deg,
+    #5C4033, 
+    #6B705C, 
+    #8C7E73, 
+    #4B4B4B,
+    #7D7461, 
+    #A68A64  
+  );
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-move 6s ease-in-out infinite;
+  filter: drop-shadow(0 0 5px rgba(92, 64, 51, 0.5));
+  transition: transform 0.3s ease;
+}
+
+.gradient-animated:hover {
+  transform: scale(1.05);
+}
+
+/* Dark Mode Gradient */
+.dark .gradient-animated {
+  background-image: linear-gradient(
+    90deg,
+    #6EE7B7,
+    #22D3EE,
+    #3B82F6,
+    #9333EA,
+    #14B8A6,
+    #84CC16
+  );
+  filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.45));
+}
+
 
