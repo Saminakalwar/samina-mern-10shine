@@ -43,66 +43,94 @@ const Login = () => {
 
   return (
     <>
-     <Navbar />
-   <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 bg-white rounded-2xl shadow-lg">
-        <h2 className="text-2xl font-bold text-center mb-2">Login</h2>
-        <p className="text-center text-gray-500 mb-3">
-            Enter your credentials to access Notes App Dashboard.
-          </p>
+      <Navbar />
 
-        <form onSubmit={handleLogin} className="space-y-4">
-          <input
-            id="email"
-            name="email"
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-400"
-            required
-            autoComplete="email"
-          />
+      {/* Centered container */}
+      <div className="flex justify-center items-center min-h-screen">
+      <div className="w-full max-w-sm bg-[#E3D5CA] dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-xl sm:p-6 p-5 transition-colors duration-300">
 
-          <PasswordInput id="password" name="password" value={password} onChange={(e)=>setPassword(e.target.value) }  autoComplete="current-password"/>
+          <form onSubmit={handleLogin} className="space-y-5">
+            <h5 className="text-2xl font-semibold text-gray-900 dark:text-white text-center">
+              Log in to your account
+            </h5>
 
-          {error && <p className="text-red-500 text-sm">{error}</p>}
+            {/* Email */}
+            <div>
+              <label
+                htmlFor="email"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Your email
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="name@company.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="input-box"
 
-          <button
-              type="submit"
-              className="btn-primary w-full py-3 bg-blue-600 text-white rounded hover:bg-blue-700 transition disabled:opacity-60"
-              disabled={loading}
-            >
-              {loading ? "Logging in..." : "Login"}
+                // className="bg-[#EDEDE9] border border-gray-300 text-gray-900 text-sm rounded-lg 
+                //            focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 
+                //            dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                required
+                autoComplete="email"
+              />
+            </div>
 
-            </button>
+            {/* Password */}
+            <div>
+              <PasswordInput
+                id="password"
+                name="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
+              />
+              {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+            </div>
 
-             {/* 🔹 Forgot Password Link */}
-            <div className="text-right mt-0">
+            {/* Remember me + Forgot Password */}
+            <div className="flex items-center justify-between">
+             
               <button
                 type="button"
                 onClick={() => setOpenModal(true)}
-                className="text-blue-500 hover:underline text-sm"
+                className="text-sm text-blue-700 hover:underline dark:text-blue-500"
               >
                 Forgot password?
               </button>
             </div>
 
-        </form>
-        
-        <p className="mt-4 text-sm text-center">
-          Not registered yet?{" "}
-          <Link to="/signup" className="text-primary hover:underline">
-            Create an Account
-          </Link>
-        </p>
+            {/* Submit button */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full text-white bg-[#8C7E73] hover:bg-[#8C7E80] 
+                         focus:ring-4 focus:outline-none focus:ring-blue-300 
+                         font-medium rounded-lg text-sm px-5 py-2.5 text-center 
+                         dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800
+                         transition duration-200 ease-in-out"
+            >
+              {loading ? "Logging in..." : "Login to your account"}
+            </button>
 
+            {/* Register link */}
+            <div className="text-sm font-medium text-gray-500 dark:text-gray-300 text-center">
+              Not registered?{" "}
+              <Link to="/signup" className="text-blue-700 hover:underline dark:text-blue-500">
+                Create account
+              </Link>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
 
-    {/* 🔹 Forgot Password Modal */}
+      {/* Forgot Password Modal */}
       <ForgotPasswordModal open={openModal} onClose={() => setOpenModal(false)} />
     </>
   )
+
 }
 export default Login
