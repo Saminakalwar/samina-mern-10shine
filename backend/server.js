@@ -11,12 +11,14 @@ const authRoutes = require('./src/routes/authRoutes');
 const noteRoutes = require('./src/routes/noteRoutes');
 const errorMiddleware = require('./src/middleware/errorMiddleware');
 const passwordRoutes = require('./src/routes/passRoutes');
+const profileRoutes = require('./src/routes/profileRoute');
 
 const app = express();
 
 
 // Global Middlewares 
-app.use(express.json());  // to parse json data 
+app.use(express.json({ limit: '20mb' }));
+app.use(express.urlencoded({ extended: true, limit: '20mb' }));
 app.use(cors());
 
 // Adds a unique ID to each request for traceable logging
@@ -33,6 +35,8 @@ app.use(expressLogger);
 app.use('/api/auth', authRoutes);
 app.use('/api/notes', noteRoutes);
 app.use('/api/auth', passwordRoutes);
+app.use('/api', profileRoutes);
+
 
 //404-error handler
 app.use((req, res) => {
@@ -46,24 +50,21 @@ app.use(errorMiddleware);
 // Server + DB initialization
 const PORT = process.env.PORT || 5000;
 
-connectDB()
-  .then(() => {
-    app.listen(PORT, () => {
-      logger.info({
-      msg:`Server started successfully`,
-      port: PORT,
-      env: process.env.NODE_ENV || 'development',
-  });
+  connectDB()
+    .then(() => {
+      app.listen(PORT, () => {
+        logger.info({
+          msg: `Server started successfully`,
+          port: PORT,
+          env: process.env.NODE_ENV || 'development',
+        });
+      });
+    })
+    .catch((err) => {
+      logger.error({ msg: 'DB connection Failed', error: err.message });
+      process.exit(1);
     });
-  })
-  .catch((err) => {
-    
-    logger.error({
-      msg: 'DB connection Failed',
-      error: err.message
-    });
-    process.exit(1);
-  });
+
 
   //Graceful shutdown 
   process.on('SIGINT', () => {
@@ -71,3 +72,5 @@ connectDB()
   process.exit(0);
 });
 
+
+module.exports = app; //to be used for test units

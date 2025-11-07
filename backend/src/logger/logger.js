@@ -1,14 +1,16 @@
-const pino = require('pino');
-const expressPino = require('express-pino-logger');
+const pino = require("pino");
+const expressPino = require("express-pino-logger");
 
-const isDev = process.env.NODE_ENV === 'development';
+const env = process.env.NODE_ENV || "development";
+const isDev = env === "development";
+const isTest = env === "test";
 
 const logger = pino({
-  base: null,   //to remove pid & hostname globally to keep logs clean
-  level: isDev ? 'debug' : 'info',   // more verbose in dev
+  base: null,     //to remove pid & hostname globally to keep logs clean
+  level: isTest ? "silent" : isDev ? "debug" : "info",    // more verbose in dev
   transport: isDev
     ? {
-        target: 'pino-pretty',
+        target: "pino-pretty",
         options: {
           colorize: true,
           translateTime: "SYS:dd-mm-yyyy HH:MM:ss",
@@ -16,8 +18,13 @@ const logger = pino({
           messageFormat: "{msg}",
         },
       }
-    : undefined,  // no pretty-print in production
+    : undefined,      // no pretty-print in production
 });
+
+// ✅ Safe function to get URL as a string
+const getUrl = (req) => {
+  return req.originalUrl || req.url || "";
+};
 
 const expressLogger = expressPino({
   logger,
@@ -25,21 +32,31 @@ const expressLogger = expressPino({
     req: (req) => ({
       id: req.id,
       method: req.method,
-      url: req.url,
+      url: getUrl(req),
     }),
     res: (res) => ({
       statusCode: res.statusCode,
     }),
   },
-   autoLogging: {
-   ignore: (req) =>
-  req.url === "/favicon.ico" ||
-  req.url.startsWith("/static") ||
-  req.url === "/health" ||
-  (req.url.startsWith("/api/auth/get-user") ||
-  (req.url.includes("/notes") && req.method === "GET")),
+  autoLogging: {
+    ignore: (req) => {
+      const url = getUrl(req);
+
+      return (
+        url === "/favicon.ico" ||
+        url.startsWith("/static") ||
+        url === "/health" ||
+        url.startsWith("/api/auth/get-user") ||
+        url.startsWith("/api/notes") ||
+        url.startsWith("/api/profile") ||
+        (url.includes("/notes") && req.method === "GET")
+      );
+    },
   },
 });
 
 module.exports = { logger, expressLogger };
+
+
+
 
