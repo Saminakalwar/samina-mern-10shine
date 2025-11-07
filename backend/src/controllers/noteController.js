@@ -1,7 +1,7 @@
 const Note = require('../models/Note');
 const {logger} = require('../logger/logger');
 
-//Create Note
+//create note
 exports.createNote = async (req, res, next) => {
   const { title, content } = req.body;
   const user = req.user;
@@ -27,14 +27,14 @@ exports.createNote = async (req, res, next) => {
   }
 };
 
-//Fetch Notes
+//fetch notes
 exports.getNotes = async (req, res, next) => {
   const user = req.user;
   const reqId = req.id;
   try {
     const notes = await Note.find({ user: user._id }).sort({ updatedAt: -1 });
     logger.info({ reqId, user: user._id, count: notes.length }, "Notes retrieved");
-    res.json({ error: false, notes, message: "All notes retrieved successfully" });
+    res.json({ error: false, notes, count:notes.length, message: "All notes retrieved successfully" });
   } 
   catch (err) {
     logger.error({ reqId, error: err.message }, "Error retrieving notes");
@@ -42,7 +42,7 @@ exports.getNotes = async (req, res, next) => {
   }
 };
 
-// Edit Notes
+//update note
 exports.updateNote = async (req, res, next) => {
   try {
     const { title, content } = req.body;
@@ -77,7 +77,7 @@ exports.updateNote = async (req, res, next) => {
   }
 };
 
-//Delete Note
+//delete note
 exports.deleteNote = async (req, res, next) => {
   const user = req.user;
   const noteId = req.params.id;
@@ -97,4 +97,46 @@ exports.deleteNote = async (req, res, next) => {
     logger.error({ reqId, error: err.message }, "Error deleting note") 
     next(err);
   }
+};
+
+//search notes
+exports.searchNotes = async (req, res, next)=>{
+    const user = req.user;
+    const reqId = req.id;
+    const {query} = req.query;
+    
+    if(!query?.trim()){
+      logger.warn({reqId, user: user?._id}, "Search Failed - query missing");
+      return res.status(400).json({error: true, message: "Search query is required"});
+    }
+
+    try{
+        const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+        const matchingNotes = await Note.find({
+          user: user._id,
+          $or: [
+            { title: { $regex: new RegExp(escapedQuery, "i") } },
+            { content: { $regex: new RegExp(escapedQuery, "i") } },
+          ],
+        }).sort({ updatedAt: -1 });
+
+        logger.info({
+          reqId, 
+          user: user._id,
+          query,
+          results: matchingNotes.length,
+        }, "Notes search Successful"
+      );
+
+        return res.json({
+          error: false,
+          notes: matchingNotes,
+          message: "Notes matching the search query retrieved successfully",
+        });
+    }
+    catch(err){
+      logger.error({reqId, user: user?._id, error: err.message}, "Error in Search Notes");
+      next(err);
+    }
 };
