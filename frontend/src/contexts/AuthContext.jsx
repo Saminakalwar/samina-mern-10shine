@@ -4,50 +4,80 @@ import API from "../services/api";
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(() => {
-    const stored = localStorage.getItem("user");
+
+    const [user, setUser] = useState(() => {
+        
+    const stored = localStorage.getItem("user");  //restore user from Local Storage if availbale
     return stored ? JSON.parse(stored) : null;
-  });
+    });
+    const [loading, setLoading] = useState(true);
 
-  // Keep localStorage and state in sync
-  useEffect(() => {
 
-    if (user) {
-      localStorage.setItem("user", JSON.stringify(user));
-    } else {
-      localStorage.removeItem("user");
-      localStorage.removeItem("token");
+    // Keep localStorage and state in sync
+    useEffect(() => {
+      if (user) {
+        localStorage.setItem("user", JSON.stringify(user));
+      } else {
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+      }
+    }, [user]);
+
+    useEffect(() => {
+      const token = localStorage.getItem("token");
+      if (token && !user) {
+        console.log("Token found, fetching user info once at startup...");
+        getUserInfo().finally(() => setLoading(false));
+      } else {
+        setLoading(false);
+      }
+    }, []);
+
+
+      //  Login
+    const login = async (email, password) => {
+      try{
+      const res = await API.post("/auth/login", { email, password });
+
+      if(res.data?.user){
+      console.log("Auth.Login response:", res.data.user);
+      setUser(res.data.user);
+      localStorage.setItem("token", res.data.token);
+      }
     }
-  }, [user]);
+    catch(error){
+        console.error("Login error:", error);
+        throw error;
+    }
+    };
 
-  //  Login
-const login = async (email, password) => {
-  const res = await API.post("/auth/login", { email, password });
-  console.log(" Login response:", res.data);
-  const { token, user } = res.data;
-  localStorage.setItem("token", token);
-  setUser(user);
-  return user;
-};
-
-  
 
   //  Register
   const register = async (username, email, password) => {
-    const res = await API.post("/auth/register", { username, email, password });
-    const { token, user } = res.data;
-    localStorage.setItem("token", token);
-    setUser(user);
-    return user;
-  };
+      try{
+          const res = await API.post("/auth/register", { username, email, password });
+          
+          if(res.data?.user){
+            console.log("Auth.register response: ", res.data.user);
+            setUser(res.data.user);
+            localStorage.setItem("token", res.data.token);
+          }
+      }
+      catch(error){
+          console.error("Registration error: ", error);
+          throw error;
+      }
+        };
+        
 
   // Get logged-in user info
   const getUserInfo = async () => {
     try {
       const res = await API.get("/auth/get-user");
+
       if (res.data?.user) {
+        console.log("Auth.getUserInfo response: ", res.data.user);
         setUser(res.data.user);
-        console.log(res.data.user);
         return res.data.user;
       }
     } catch (error) {
@@ -58,15 +88,15 @@ const login = async (email, password) => {
 
   //  Logout
   const logout = () => {
+    console.log("Logging out...");
     setUser(null);
     localStorage.removeItem("token");
     localStorage.removeItem("user");
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, getUserInfo }}>
+    <AuthContext.Provider value={{ user, login, register, logout, getUserInfo, loading }}>
       {children}
     </AuthContext.Provider>
   );
 };
-
