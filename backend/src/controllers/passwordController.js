@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { logger } = require('../logger/logger');
 const bcrypt = require("bcryptjs");
-const { verifyToken } = require('../utils/jwt');
+const { verifyToken, signResetToken } = require('../utils/jwt');
 
 exports.forgotPassword = async (req, res)=>{
     const reqId = req.id;
@@ -23,9 +23,8 @@ exports.forgotPassword = async (req, res)=>{
         return res.status(404).json({ message: "User not found" });
     }
 
-    //Generate reset token (valid for 10 mins)
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "10m" });
-
+    const token = signResetToken(user._id);
+        
     // set up nodemailer transporter
     const transporter = nodemailer.createTransport({
         service: "gmail",
@@ -54,7 +53,6 @@ exports.forgotPassword = async (req, res)=>{
 
     logger.info({ reqId, email}, "Password reset email sent");
     res.status(200).json({ success: true, message: "Password reset link sent successfully" });
-
     }
     catch(err){
     logger.error({ reqId, error: err.message }, "Error in forget password");
@@ -63,36 +61,42 @@ exports.forgotPassword = async (req, res)=>{
     }
 };
 
-exports.resetPassword = async (req, res)=>{
-    const reqId = req.id;
+//Reset Password
+exports.resetPassword = async (req, res) => {
+  const reqId = req.id;
 
-    try{
-        const {token} = req.params;
-        const {newPassword} = req.body;  //new Password
+  try {
+    const { token } = req.params;
+    const { newPassword } = req.body;
 
-            // verify token
-        const decoded = verifyToken(token);
-
-        if (!decoded || !decoded.userId) {
-        logger.warn({ reqId }, "Invalid or expired reset token");
-        return res.status(401).json({ message: "Invalid or expired token" });
-        }
-            // Find user by ID
-        const user = await User.findById(decoded.userId);
-       
-        if (!user) {
-        return res.status(404).json({ error: true, message: "User not found" });
-        }
-
-        const salt = await bcrypt.genSalt(10);
-        user.password = await bcrypt.hash(newPassword, salt);
-        await user.save();
-
-        logger.info({ reqId, userId: user._id }, "Password reset successful");
-         res.status(200).json({ success: true, message: "Password has been reset successfully" });
+    let decoded;
+    try {
+      decoded = verifyToken(token);
+    } 
+    catch (verifyErr) {
+      logger.warn({ reqId, error: verifyErr.message }, "Token verification failed");
+      return res.status(401).json({ message: "Invalid or expired token" });
     }
-    catch(err){
+
+    if (!decoded?.id) {
+      logger.warn({ reqId }, "Decoded token missing id");
+      return res.status(401).json({ message: "Invalid or expired token" });
+    }
+
+    const user = await User.findById(decoded.id);
+    if (!user) {
+      return res.status(404).json({ error: true, message: "User not found" });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(newPassword, salt);
+    await user.save();
+
+    logger.info({ reqId, userId: user._id }, "Password reset successful");
+    res.status(200).json({ success: true, message: "Password has been reset successfully" });
+  } 
+  catch (err) {
     logger.error({ reqId, error: err.message }, "Error in reset password");
     res.status(500).json({ message: "Server error" });
-    }
-}
+  }
+};

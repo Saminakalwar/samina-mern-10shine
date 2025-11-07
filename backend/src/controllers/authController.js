@@ -4,24 +4,22 @@ const bcrypt = require('bcryptjs');
 const {isValidEmail, isValidPassword, isNotEmpty} = require("../utils/validator");
 const {signToken} = require('../utils/jwt');
 
-
 //Get user
 exports.getUser = async (req, res, next) => {
    const reqId = req.id;
     
   try {
     const user = req.user;
+   
     if (!user) {
     logger.warn({ reqId }, "Unauthorized access attempt to getUser");
     return res.status(401).json({ error: true, message: "Unauthorized" });
     }
 
-    logger.info({ reqId, userId: user._id }, "User profile retrieved successfully");
-
     res.json({
     error: false,
     user: { id: user._id, username: user.username, email: user.email, createdAt: user.createdAt, updatedAt: user.updatedAt },
-    message: "User fetched successfully",
+    message: "user info fetched successfully",
     });
 
   } catch (err) {
@@ -66,31 +64,32 @@ exports.register = async (req, res, next)=>{
     logger.info({reqId, user: user._id},"user registered successfully");
 
     res.status(201).json({error: false, token, 
-       user: { id: user._id, username: user.username, email: user.email, createdAt: user.createdAt, updatedAt: user.updatedAt },
+        user: { id: user._id, username: user.username, email: user.email, createdAt: user.createdAt, updatedAt: user.updatedAt },
         message: "Registration Successful",
     });
-}
-catch(err){
-logger.error({ reqId, error: err.message }, "Error during registration");
-next(err);
-}
-}
+    }
+    catch(err){
+    logger.error({ reqId, error: err.message }, "Error during registration");
+    next(err);
+    }
+    }
 
 //Login
 exports.login = async (req, res, next)=>{
+    
         const reqId = req.id;  //to trace request ids by logger
         const {email, password} = req.body;
 
     try{
 
     if (!email) {
-    return res.status(400).json({error: true, message: "email is required"});
+        return res.status(400).json({error: true, message: "email is required"});
     }
     if (!password) {
-    return res.status(400).json({error: true, message: "password is required"});
+        return res.status(400).json({error: true, message: "password is required"});
     }
     if (!isValidEmail(email)) {
-    return res.status(400).json({error: true, message: "email is invalid"});
+        return res.status(400).json({error: true, message: "email is invalid"});
     }
   
     const user = await User.findOne({email});
@@ -118,3 +117,4 @@ exports.login = async (req, res, next)=>{
         next(err);
     }
 }
+
