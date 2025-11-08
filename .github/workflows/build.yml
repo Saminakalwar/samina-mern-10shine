@@ -3,10 +3,10 @@ name: Build
 on:
   push:
     branches:
-      - develop   
+      - sonar-test   
   pull_request:
     branches:
-      - develop
+      - sonar-test
     types: [opened, synchronize, reopened]
 
 jobs:
