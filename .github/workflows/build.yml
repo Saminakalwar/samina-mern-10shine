@@ -3,10 +3,12 @@ name: Build
 on:
   push:
     branches:
-      - sonar-test   
+      - sonar-test
+      - develop
   pull_request:
     branches:
       - sonar-test
+      - develop
     types: [opened, synchronize, reopened]
 
 jobs:
@@ -16,8 +18,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Shallow clones should be disabled for full analysis
+          fetch-depth: 0
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_SCANNER_OPTS: "-Dsonar.branch.name=${{ github.ref_name }}"
