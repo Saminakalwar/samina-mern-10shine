@@ -1,64 +1,73 @@
-📝 MERN Notes App
+Notes App — MERN Stack
 
-A full-stack MERN application for creating, editing, searching, and managing notes with user authentication, profile management, and dark/light theme support.
+A full-stack secure notes management application with rich-text editing, user authentication, password reset flow, profile management, 
+Cloudinary file handling, dark mode UI, search functionality, and complete backend/frontend testing.
 
-🚀 Features:
+✨ Key Features
 
-🔐 User Authentication
+✅ Authentication & Authorization
 
-JWT-based login/register
-
-
-🧑‍💼 Profile Management
-
-Upload, update, and remove profile picture (Cloudinary)
-Update personal details
-Delete account permanently
-
-🗒️ Notes CRUD
-
-Create, edit, delete, and view notes
-Real-time search with instant filtering
+    Register, login, logout
+    JWT-based protected routes
+    Auto-refresh user info
+    Auth interceptor to handle expired tokens
 
 
-🎨 UI / UX
+✅ Notes Management
 
-Tailwind CSS with dark/light theme toggle
-Responsive layout with Navbar & Sidebar
-Custom modals for confirmations
-
-
-☁️ Cloud Integration
-
-Profile images stored in Cloudinary
+    Create, edit, delete notes
+    Rich text editor (TipTap)
+    Bullet & ordered lists
+    Animated UI
+    Real-time notes counter
+    Debounced search with server-side filtering
 
 
-⚙️ Backend Logging
+✅ User Profile
 
-Pino logger for structured request tracking
+    Update personal information
+    Upload, update, remove profile picture
+    Cloudinary integration
+    Account deletion
 
 
-🏗️ Tech Stack
-Layer	Technology
-Frontend	React.js, Tailwind CSS, Vite
-Backend	Node.js, Express.js
-Database	MongoDB (Mongoose)
-Auth	JWT (JSON Web Tokens)
-Image Uploads	Cloudinary
-Logging	Pino Logger
+✅ Password Reset Flow
+
+    Forgot password modal
+    Reset link via email
+    Token-protected reset page
+
+
+✅ UI/UX
+
+Fully responsive
+    Light/Dark mode
+    Modern gradient animations
+    Custom Sidebar + Navbar
+    Smooth transitions
+
+✅ Quality Assurance
+
+    Frontend testing: Vitest + React Testing Library
+    Backend testing: Mocha + Chai + Supertest
+    SonarQube integration for code quality
+    Clean MVC architecture
+    Logging: Pino + pino-http
+
+
+
 📂 Project Structure
-mern-notes-app/
+project/
 │
 ├── backend/
 │   ├── controllers/
-│   │   ├── authController.js
-│   │   ├── notesController.js
-│   │   └── profileController.js
-│   ├── middleware/
 │   ├── models/
+│   ├── middleware/
 │   ├── routes/
-│   ├── config/
-│   └── server.js
+│   ├── utils/
+│   ├── tests/
+│   ├── server.js
+│   └── package.json
 │
 └── frontend/
     ├── src/
@@ -66,136 +75,176 @@ mern-notes-app/
     │   ├── contexts/
     │   ├── hooks/
     │   ├── pages/
+    │   ├── routes/
     │   ├── services/
-    │   └── index.jsx
-    ├── public/
-    └── index.css
-
-
-⚙️ Installation & Setup
-1️⃣ Clone the repository
-git clone https://github.com/yourusername/mern-notes-app.git
-cd mern-notes-app
-
-2️⃣ Backend setup
-cd backend
-npm install
-
-
-Create a .env file in /backend:
-
-PORT=5000
-MONGO_URI=your_mongodb_uri
-JWT_SECRET=your_jwt_secret
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
-
-
-Run backend:
-
-npm run dev
-
-3️⃣ Frontend setup
-cd ../frontend
-npm install
-npm run dev
-
-
-Access the app: http://localhost:5173/
-
-🧩 Environment Variables
-Key	Description
-MONGO_URI	MongoDB connection string
-JWT_SECRET	Secret for token signing
-CLOUDINARY_*	Cloudinary credentials for image upload
-PORT	Backend server port
-🧠 Folder Highlights
-
-contexts/ → React Context API for Auth, Notes, and Profile.
-services/api.js → Axios instance with auth token interceptor.
-components/ → UI elements (Navbar, Modals, SearchBar, etc.)
-pages/ → Login, Signup, Dashboard, Profile.
-
-
-🧰 Scripts
-Frontend
-npm run dev       # Start dev server
-npm run build     # Build production app
-
-Backend
-npm run dev       # Run backend in watch mode
-npm start         # Run backend in production
-
-
-🧑‍💻 Developer Notes
-
-Uses React Context API instead of Redux for lightweight state management.
-Backend logs each request via Pino logger with unique request IDs.
-Profile pictures are optimized client-side before upload using browser-image-compression.
-
-
-🧪 Testing
-Backend Testing — Mocha + Chai + Supertest
-
-Test files: backend/test/
-
-cd backend
-npm test
-
-Frontend Testing — Jest + React Testing Library
-
-Test files: frontend/src/__tests__/
-
-cd frontend
-npm test
+    │   └── App.jsx
+    └── package.json
 
 
 
-🔍 Code Quality & SonarCloud Integration:
-This project uses SonarCloud for code quality analysis.
+🛠️ Tech Stack:
 
+✅ Frontend
 
-1️⃣ GitHub Actions Workflow:
+    React 19
+    React Router DOM 7
+    TailwindCSS 4
+    TipTap Editor
+    Axios
+    React Hot Toast
+    React Icons
+    Vitest + RTL (testing)
 
-.github/workflows/build.yml triggers SonarCloud analysis on develop branch:
+✅ Backend
 
-name: Build
-on:
-  push:
-    branches:
-      - develop
-  pull_request:
-    branches:
-      - develop
-jobs:
-  sonarqube:
-    name: SonarCloud Scan
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarqube-scan-action@v6
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+Node.js + Express
+MongoDB + Mongoose
+JWT Authentication
+Multer + Cloudinary
+Nodemailer
+Pino Logger
+Mocha + Chai + Supertest (testing)
 
 
 
-2️⃣ Sonar Project Properties
+🚀 Installation & Setup
+    1. Clone the repository
+    git clone https://github.com/your-username/notes-app.git
+    cd notes-app
 
-sonar-project.properties in repo root:
 
-sonar.projectKey=Saminakalwar_samina-mern-10shine
-sonar.organization=myrepo-analysis
-sonar.sources=.
+📦 Backend Setup
+    Install dependencies
+    cd backend
+    npm install
+
+
+✅ Create .env:
+
+    MONGO_URI=
+    JWT_SECRET=
+    PORT=5000
+    EMAIL_USER=
+    EMAIL_PASS=
+    CLOUDINARY_CLOUD_NAME=
+    CLOUDINARY_API_KEY=
+    CLOUDINARY_API_SECRET=
+
+
+✅ Run backend 
+    Development => npm run dev
+    Production => npm start
+
+
+🎨 Frontend Setup
+    Install dependencies
+    cd frontend
+    npm install
+
+
+✅ Add environment variable
+
+In .env:   VITE_API_BASE_URL=http://localhost:5000/api
+
+
+    Run frontend
+    npm run dev
+
+
+✅ Running Tests
+    Frontend (Vitest)
+    cd frontend
+    npm test
+
+Backend (Mocha + Chai)
+    cd backend
+    npm test
+
+Backend Test Coverage
+    npm run coverage
+
+🔍 SonarQube
+    Generate project properties
+    sonar-project.properties
+
+
+Example:
+
+sonar.projectKey=notes-app
 sonar.sourceEncoding=UTF-8
+sonar.sources=./backend,./frontend/src
+sonar.tests=./backend/tests
+sonar.javascript.lcov.reportPaths=coverage/lcov.info
+
+Run scanner
+sonar-scanner
 
 
 
-3️⃣ How it works
+🔐 Authentication Flow
 
-When you push to develop or raise a PR, GitHub Actions runs SonarCloud analysis.
-Your code is scanned for bugs, vulnerabilities, code smells, and code coverage.
-SonarCloud reports appear in the Actions tab and on the SonarCloud dashboard.
+User logs in → receives JWT
+Token is stored in localStorage
+Axios interceptor attaches Authorization: Bearer <token>
+Backend verifies token for all protected routes
+On expiry → 401 → auto-logout & redirect to /login
+
+
+🗄️ API Endpoints Summary
+Auth :
+    POST /api/auth/register
+    POST /api/auth/login
+    GET  /api/auth/get-user
+    POST /api/auth/forgot-password
+    POST /api/auth/reset-password/:token
+
+Notes :
+    GET    /api/notes
+    POST   /api/notes
+    PUT    /api/notes/:id
+    DELETE /api/notes/:id
+    GET    /api/notes/search?query=
+
+Profile :
+    GET    /api/profile
+    PUT    /api/profile
+    PUT    /api/profile-pic
+    DELETE /api/profile-pic
+    DELETE /api/delete-account
+
+
+🧱 Architecture
+Frontend Architecture:
+
+    Context API for Auth, Notes, Profile
+    Axios API service with interceptors
+    Protected routes wrapper
+    Smart components (hooks) + dumb UI components
+    Tailwind 4 with custom animations
+
+
+Backend Architecture
+
+    MVC pattern
+    Centralized error handler
+    Global logger (Pino)
+
+Middleware:
+
+    Auth (JWT)
+    Multer (file uploads)
+    Request logging
+    Modular controllers & services
+
+
+🏁 Conclusion
+
+This project delivers a complete, production-grade MERN Notes Application with robust authentication, rich-text note editing, profile customization,
+image uploads, search, animations, testing, logging, and code-quality integration.
+
+Here is the project demo link via loom video recording extension:
+
+https://www.loom.com/share/b10d7708ddc34f9c9dd152cfba63853f
+
+
+
